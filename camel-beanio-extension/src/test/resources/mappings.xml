@@ -21,7 +21,7 @@
         xsi:schemaLocation="http://www.beanio.org/2012/03 http://www.beanio.org/2012/03/mapping.xsd">
 
   <stream name="test-simple" format="csv">
-    <record name="data" class="io.github.camel.dateformat.beanio.record.Record">
+    <record name="data" class="io.github.apache.camel.dataformat.beanio.record.Record">
       <field name="order"/>
       <field name="name"/>
       <field name="date" format="yyyyMMdd"/>
@@ -29,11 +29,11 @@
   </stream>
 
   <stream name="test-complete" format="csv">
-    <record name="data" class="io.github.camel.dateformat.beanio.record.Record">
+    <record name="data" class="io.github.apache.camel.dataformat.beanio.record.Record">
       <field name="order"/>
       <field name="name"/>
       <field name="date" format="yyyyMMdd"/>
-      <segment name="details" collection="list" class="io.github.camel.dateformat.beanio.record.RecordDetail">
+      <segment name="details" collection="list" class="io.github.apache.camel.dataformat.beanio.record.RecordDetail">
         <field name="code"/>
         <field name="qty"/>
         <field name="value" type="double" format="#.00"/>

@@ -6,16 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.github.apache.camel.dateformat.beanio.DynamicDataFormat;
+import org.apache.camel.RoutesBuilder;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.junit5.CamelSpringTestSupport;
+import org.apache.camel.test.junit5.CamelTestSupport;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import io.github.apache.camel.dataformat.beanio.record.Record;
 import io.github.apache.camel.dataformat.beanio.record.RecordDetail;
 
-public class SpringDynamicDataFormatTest extends CamelSpringTestSupport {
+public class SpringDynamicDataFormatTest extends CamelTestSupport {
 
 	private final String STREAM_PROPERTY_NAME = "streamName";
 
@@ -28,8 +29,23 @@ public class SpringDynamicDataFormatTest extends CamelSpringTestSupport {
 			+ "003,Dee Dee,20201030,C,2,48.25" + System.lineSeparator();
 
 	@Override
-	protected AbstractApplicationContext createApplicationContext() {
-		return new ClassPathXmlApplicationContext("spring-test.xml");
+	protected RoutesBuilder createRouteBuilder() throws Exception {
+		return new RouteBuilder() {
+			@Override
+			public void configure() throws Exception {
+
+				from("direct:marshal-simple")
+						.setProperty("streamName", constant("test-simple"))
+						.to("direct:marshal");
+				from("direct:marshal-complete")
+						.setProperty("streamName", constant("test-complete"))
+						.to("direct:marshal");
+				from("direct:marshal")
+						//.marshal("dformat")
+						.marshal(new DynamicDataFormat("mappings.xml"))
+						.to("mock:beanio-marshal");
+			}
+		};
 	}
 
 	@Test
